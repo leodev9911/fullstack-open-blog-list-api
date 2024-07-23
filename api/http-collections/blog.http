@@ -1,0 +1,13 @@
+### Get all the blogs
+GET http://localhost:8080/api/blogs
+
+### Create an entry for a new blog
+POST http://localhost:8080/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Top 5 preguntas de JavaScript en Stack Overflow",
+    "author": "Miguel Angel Durán García",
+    "url": "https://midu.dev/top-5-preguntas-javascript-stack-overflow/",
+    "likes": 0
+}

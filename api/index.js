@@ -4,5 +4,5 @@ const app = require('./app');
 
 const PORT = config.PORT || 8080;
 app.listen(PORT, () => {
-    logger.info(`Your app is running in http://localhost:${PORT}/`)
+    logger.info(`Server running on http://localhost:${PORT}/`)
 })
