@@ -6,8 +6,6 @@ POST http://localhost:8080/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Top 5 preguntas de JavaScript en Stack Overflow",
     "author": "Miguel Angel Durán García",
-    "url": "https://midu.dev/top-5-preguntas-javascript-stack-overflow/",
-    "likes": 0
+    "url": "https://midu.dev/to-reversed-to-spliced-to-sorted-with/"
 }

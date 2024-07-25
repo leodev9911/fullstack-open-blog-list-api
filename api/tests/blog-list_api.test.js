@@ -1,0 +1,127 @@
+const { test, after, describe, beforeEach } = require('node:test');
+const mongoose = require('mongoose');
+const supertest = require('supertest');
+const app = require('../app');
+const Blog = require('../models/blog');
+const assert = require('node:assert');
+
+const api = supertest(app);
+
+const initialBlogs = [
+    {
+        title: 'Top 5 preguntas de JavaScript en Stack Overflow',
+        author: 'Miguel Angel Durán García',
+        url: 'https://midu.dev/top-5-preguntas-javascript-stack-overflow/',
+        likes: 0,
+    },
+    {
+        title: 'React patterns',
+        author: 'Michael Chan',
+        url: 'https://reactpatterns.com/',
+        likes: 7,
+    },
+    {
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 5,
+    },
+];
+
+beforeEach(async () => {
+    await Blog.deleteMany({});
+
+    await Blog.insertMany(initialBlogs);
+});
+
+describe('testing the blog-list api', () => {
+    test('/api/blogs returns a status code of 200 and there are in JSON format', async () => {
+        await api
+            .get('/api/blogs')
+            .expect(200)
+            .expect('Content-type', /application\/json/);
+    });
+
+    test('/api/blogs returns 3 blogs', async () => {
+        const response = await api.get('/api/blogs');
+
+        assert.strictEqual(
+            response.body.length,
+            initialBlogs.length,
+            'Should be equal'
+        );
+    });
+
+    test('the unique identifier of a blog posts is named id', async () => {
+        const response = await api.get('/api/blogs');
+
+        const keyArrays = Object.keys(response.body[0]);
+        assert.strictEqual(
+            keyArrays.includes('id'),
+            true,
+            'The blog post must include a key named id as unique identifier'
+        );
+    });
+
+    test('making a POST request to /api/blogs create a new entry', async () => {
+        const newPost = {
+            title: 'toReversed, toSpliced, toSorted y with. Nuevos métodos de Array en JavaScript explicados.',
+            author: 'Miguel Angel Durán García',
+            url: 'https://midu.dev/to-reversed-to-spliced-to-sorted-with/',
+            likes: 0,
+        };
+
+        await api
+            .post('/api/blogs')
+            .send(newPost)
+            .expect(201);
+            
+        const response = await api.get('/api/blogs');
+        const titles = response.body.map(r => r.title);
+        assert.strictEqual(response.body.length, initialBlogs.length + 1);
+        assert.strictEqual(titles.includes(newPost.title), true);
+    });
+
+    test('making a POST request without likes will create a new blog entry with likes: 0', async () => {
+        const newPost = {
+            title: 'toReversed, toSpliced, toSorted y with. Nuevos métodos de Array en JavaScript explicados.',
+            author: 'Miguel Angel Durán García',
+            url: 'https://midu.dev/to-reversed-to-spliced-to-sorted-with/'
+        };
+
+        const response = await api  
+            .post('/api/blogs')
+            .send(newPost)
+            .expect(201);
+        
+        assert.strictEqual(response.body.likes, 0);
+    });
+
+    test('making a POST request without title will respond with a 400 status code', async () => {
+        const newPost = {
+            author: 'Miguel Angel Durán García',
+            url: 'https://midu.dev/to-reversed-to-spliced-to-sorted-with/'
+        };
+
+        await api
+            .post('/api/blogs')
+            .send(newPost)
+            .expect(400)
+    });
+
+    test('making a POST request without url will respond with a 400 status code', async () => {
+        const newPost = {
+            title: 'toReversed, toSpliced, toSorted y with. Nuevos métodos de Array en JavaScript explicados.',
+            author: 'Miguel Angel Durán García',
+        };
+
+        await api
+            .post('/api/blogs')
+            .send(newPost)
+            .expect(400)
+    });
+
+    after(async () => {
+        await mongoose.connection.close();
+    });
+});
