@@ -28,13 +28,13 @@ const initialBlogs = [
     },
 ];
 
-beforeEach(async () => {
-    await Blog.deleteMany({});
+describe('testing the blog-list api when there are no initial data', () => {
+    beforeEach(async () => {
+        await Blog.deleteMany({});
+    
+        await Blog.insertMany(initialBlogs);
+    });
 
-    await Blog.insertMany(initialBlogs);
-});
-
-describe('testing the blog-list api', () => {
     test('/api/blogs returns a status code of 200 and there are in JSON format', async () => {
         await api
             .get('/api/blogs')
@@ -62,7 +62,9 @@ describe('testing the blog-list api', () => {
             'The blog post must include a key named id as unique identifier'
         );
     });
+});
 
+describe('addition of a new note', () => {
     test('making a POST request to /api/blogs create a new entry', async () => {
         const newPost = {
             title: 'toReversed, toSpliced, toSorted y with. Nuevos métodos de Array en JavaScript explicados.',
@@ -120,8 +122,41 @@ describe('testing the blog-list api', () => {
             .send(newPost)
             .expect(400)
     });
+})
 
-    after(async () => {
-        await mongoose.connection.close();
-    });
+describe('deletion of a blog', () => {
+    test('if success return 204 status', async () => {
+        const responseAtStart = await api.get('/api/blogs');
+        const blogToDelete = responseAtStart.body[0];
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204);
+
+        const responseAtEnd = await api.get('/api/blogs');
+        const titles = responseAtEnd.body.map(r => r.title);
+        assert.strictEqual(titles.includes(blogToDelete.title), false);
+    })
+});
+
+describe('update of the likes of the blog', () => {
+    test('if success return 200 status', async () => {
+        const responseAtStart = await api.get('/api/blogs');
+        const blogToUpdate = responseAtStart.body[0];
+        const updatedLikesOfTheBlog = {
+            likes: blogToUpdate.likes + 1
+        }
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(updatedLikesOfTheBlog)
+            .expect(200);
+
+        const response = await api.get(`/api/blogs/${blogToUpdate.id}`);
+        assert.strictEqual(updatedLikesOfTheBlog.likes, response.body.likes);
+    })
+});
+
+after(async () => {
+    await mongoose.connection.close();
 });

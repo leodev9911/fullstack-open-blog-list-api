@@ -6,6 +6,15 @@ POST http://localhost:8080/api/blogs
 Content-Type: application/json
 
 {
+    "title": "Hola",
     "author": "Miguel Angel Durán García",
     "url": "https://midu.dev/to-reversed-to-spliced-to-sorted-with/"
+}
+
+### Updates the likes of a blog
+PUT http://localhost:8080/api/blogs/66a2ce586615f24e3b4e78ca
+Content-Type: application/json
+
+{
+    "likes": 5
 }

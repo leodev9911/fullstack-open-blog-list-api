@@ -11,6 +11,17 @@ blogsRouter.get('/', async (req, res, next) => {
     }
 });
 
+blogsRouter.get('/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        const blog = await Blog.findById(id);
+        res.send(blog);
+    } catch (error) {
+        next(error);
+    }
+})
+
 blogsRouter.post('/', async (req, res, next) => {
     try {
         const blog = new Blog(req.body);
@@ -21,5 +32,27 @@ blogsRouter.post('/', async (req, res, next) => {
         next(error)
     }
 });
+
+blogsRouter.put('/:id', async(req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        const updatedBlog = await Blog.findByIdAndUpdate(id, { likes: req.body.likes }, { new: true });
+        res.send(updatedBlog);
+    } catch (error) {
+        next(error);
+    }
+});
+
+blogsRouter.delete('/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        await Blog.findByIdAndDelete(id);
+        res.send(204).end();
+    } catch (error) {
+        next(error);
+    }
+}); 
 
 module.exports = blogsRouter;
