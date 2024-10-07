@@ -1,6 +1,5 @@
 const blogsRouter = require('express').Router();
 const Blog = require('../models/blog');
-const logger = require('../utils/logger');
 
 blogsRouter.get('/', async (req, res, next) => {
     try {
@@ -20,7 +19,7 @@ blogsRouter.get('/:id', async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-})
+});
 
 blogsRouter.post('/', async (req, res, next) => {
     try {
