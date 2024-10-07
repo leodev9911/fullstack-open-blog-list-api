@@ -7,26 +7,42 @@ usersRouter.get('/', async (req, res, next) => {
     try {
          const users = await User.find({}).select('username name id');
          res.send(users);
-    } catch {
+    } catch (error) {
         next(error);
     }
-})
+});
 
-usersRouter.post('/', async (req, res) => {
-    const { username, name, password } = req.body;
+usersRouter.post('/', async (req, res, next) => {
+    try {
+        const { username, name, password } = req.body;
 
-    const saltRounds = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, saltRounds);
+        if (!password) {
+            return res
+                    .status(400)
+                    .send({ error: 'The password is required' })
+                    .end();
+        } else if (password.length < 3) {
+            return res
+                    .status(400)
+                    .send({ error: 'The password must be at least 3 characters long' })
+                    .end();
+        }
 
-    const user = new User({
-        username,
-        name,
-        passwordHash
-    });
-
-    const savedUser = await user.save();
-
-    res.status(201).send(savedUser);
+        const saltRounds = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(password, saltRounds);
+    
+        const user = new User({
+            username,
+            name,
+            passwordHash
+        });
+    
+        const savedUser = await user.save();
+    
+        res.status(201).send(savedUser);
+    } catch (error) {
+        next(error);
+    }
 });
 
 module.exports = usersRouter;

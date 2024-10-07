@@ -1,9 +1,15 @@
+### Get all users
+GET http://localhost:8080/api/users
+
+### Get an user by username
+GET http://localhost:8080/api/users/leodev99112
+
 ### Create new user
 POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-    "name": "Leo",
-    "username": "leodev9911",
-    "password": "H&l210520*"
+    "name": "Leo2",
+    "username": "leodev911",
+    "password": "ds"
 }
