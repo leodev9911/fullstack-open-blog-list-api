@@ -11,7 +11,6 @@ usersRouter.get('/', async (req, res, next) => {
                 title: 1,
                 url: 1,
                 author: 1,
-                likes: 1
             });
          res.send(users);
     } catch (error) {
