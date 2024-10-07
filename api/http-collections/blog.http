@@ -8,7 +8,8 @@ Content-Type: application/json
 {
     "title": "Hola",
     "author": "Miguel Angel Durán García",
-    "url": "https://midu.dev/to-reversed-to-spliced-to-sorted-with/"
+    "url": "https://midu.dev/to-reversed-to-spliced-to-sorted-with/",
+    "userId": "670447bf488c3a180d826e9a"
 }
 
 ### Updates the likes of a blog

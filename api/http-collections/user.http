@@ -9,7 +9,7 @@ POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-    "name": "Leo2",
-    "username": "leodev911",
-    "password": "ds"
+    "name": "Leo",
+    "username": "leodev9911",
+    "password": "H&l210520*"
 }
