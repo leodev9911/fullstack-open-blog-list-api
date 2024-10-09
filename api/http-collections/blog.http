@@ -14,11 +14,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imhlb
 }
 
 ### Updates the likes of a blog
-PUT http://localhost:8080/api/blogs/66a2ce586615f24e3b4e78ca
+PUT http://localhost:8080/api/blogs/670480377a21e5ea1174f7aa
 Content-Type: application/json
 
 {
-    "likes": 5
+    "title": "Hola5",
+    "author": "Miguel Angel Durán García",
+    "url": "https://midu.dev/to-reversed-to-spliced-to-sorted-with/",
+    "likes": 2,
+    "userId": "670447bf488c3a180d826e9a"
 }
 
 ### Delete a blog

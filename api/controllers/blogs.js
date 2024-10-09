@@ -53,9 +53,10 @@ blogsRouter.post('/', tokenExtractor, userExtractor, async (req, res, next) => {
 
 blogsRouter.put('/:id', async (req, res, next) => {
     try {
-        const id = req.params.id
+        const { id } = req.params
+        const blog = req.body
 
-        const updatedBlog = await Blog.findByIdAndUpdate(id, { likes: req.body.likes }, { new: true })
+        const updatedBlog = await Blog.findByIdAndUpdate(id, blog, { new: true })
         res.send(updatedBlog)
     } catch (error) {
         next(error)
@@ -79,7 +80,7 @@ blogsRouter.delete('/:id', tokenExtractor, userExtractor, async (req, res, next)
         if (userId !== blog.user.toString()) {
             return res
                 .status(401)
-                .send({ 
+                .send({
                     "error": "only the creator of the blog can delete it"
                 })
         }
